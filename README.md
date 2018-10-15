@@ -8,4 +8,3 @@ La idea de este plugin es para facilitar la creación de microservicios con Spri
 * Inclusión de plugins de soporte como:
 ** Docker
 ** Release
-
