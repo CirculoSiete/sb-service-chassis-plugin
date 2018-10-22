@@ -44,9 +44,9 @@ class ChassisPlugin implements Plugin<Project> {
       mavenLocal()
     }
 
-    project.buildscript.dependencies {
+    /*project.buildscript.dependencies {
       classpath("org.springframework.boot:spring-boot-gradle-plugin:${ springBootVersion }")
-    }
+    }*/
 
     logger.warn("Aplicando plugins...")
 
