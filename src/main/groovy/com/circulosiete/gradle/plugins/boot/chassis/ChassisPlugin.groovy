@@ -22,7 +22,7 @@ import org.gradle.api.logging.Logger
 
 class ChassisPlugin implements Plugin<Project> {
 
-  public static final String DEFAULT_SPRING_BOOT_VERSION = "2.0.6"
+  public static final String DEFAULT_SPRING_BOOT_VERSION = "2.0.6.RELEASE"
 
   @Override
   void apply(Project project) {
@@ -44,10 +44,6 @@ class ChassisPlugin implements Plugin<Project> {
       mavenLocal()
     }
 
-    /*project.buildscript.dependencies {
-      classpath("org.springframework.boot:spring-boot-gradle-plugin:${ springBootVersion }")
-    }*/
-
     logger.warn("Aplicando plugins...")
 
     [
@@ -58,5 +54,33 @@ class ChassisPlugin implements Plugin<Project> {
       project.getPlugins().apply(plugin)
       logger.warn("* {}", plugin)
     }
+
+    project.repositories {
+      jcenter()
+      mavenCentral()
+      mavenLocal()
+    }
+
+    project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-actuator:${ springBootVersion }")
+    project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-web:${ springBootVersion }")
+    project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-jdbc:${ springBootVersion }")
+    project.dependencies.add('implementation', "org.apache.commons:commons-lang3:3.1")
+    project.dependencies.add('implementation', "mysql:mysql-connector-java:5.1.46")
+    project.dependencies.add('testRuntimeOnly', "org.springframework.boot:spring-boot-starter-test:${ springBootVersion }")
+    //project.dependencies.add('implementation', "")
+    //project.dependencies.add('implementation', "")
+
+    /*project.dependencies {
+      compile("")
+      compile("")
+      compile(group: '')
+      runtime('')
+      testCompile("")
+    }*/
+    /*project.buildscript.dependencies {
+      classpath("org.springframework.boot:spring-boot-gradle-plugin:${ springBootVersion }")
+    }*/
+
+
   }
 }
