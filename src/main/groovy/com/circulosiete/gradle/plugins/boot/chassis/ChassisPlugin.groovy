@@ -65,7 +65,7 @@ class ChassisPlugin implements Plugin<Project> {
     project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-web:${ springBootVersion }")
     project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-jdbc:${ springBootVersion }")
     project.dependencies.add('implementation', "org.apache.commons:commons-lang3:3.1")
-    project.dependencies.add('implementation', "mysql:mysql-connector-java:5.1.46")
+    //project.dependencies.add('implementation', "mysql:mysql-connector-java:5.1.46")
     project.dependencies.add('testRuntimeOnly', "org.springframework.boot:spring-boot-starter-test:${ springBootVersion }")
     //project.dependencies.add('implementation', "")
     //project.dependencies.add('implementation', "")
