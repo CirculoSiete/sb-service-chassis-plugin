@@ -2,7 +2,7 @@ import java.text.SimpleDateFormat
 
 buildscript {
   ext {
-    springBootVersion = '2.0.4.RELEASE'
+    springBootVersion = '2.0.6.RELEASE'
   }
   repositories {
     jcenter()
@@ -45,7 +45,7 @@ dependencies {
   compile gradleApi()
   compile localGroovy()
   //compile 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
-  compile 'com.bmuschko:gradle-docker-plugin:4.0.0'
+  compile 'com.bmuschko:gradle-docker-plugin:4.0.2'
   //compile 'org.yaml:snakeyaml:1.18'
   compile 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2'
   compile 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
@@ -130,7 +130,7 @@ publishing {
         def root = asNode()
         root.appendNode('name', project.pomName)
         root.appendNode('description', project.description)
-        root.appendNode('url', 'https://github.com/CirculoSiete/gen-ms-gradle-dev-plugin')
+        root.appendNode('url', 'https://github.com/CirculoSiete/sb-service-chassis-plugin')
         root.appendNode('inceptionYear', '2016')
         root.appendNode('packaging', 'jar')
 
