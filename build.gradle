@@ -135,9 +135,9 @@ publishing {
         root.appendNode('packaging', 'jar')
 
         def scm = root.appendNode('scm')
-        scm.appendNode('url', 'https://github.com/CirculoSiete/gen-ms-gradle-dev-plugin')
-        scm.appendNode('connection', 'scm:https://domixgithub.com/CirculoSiete/gen-ms-gradle-dev-plugin.git')
-        scm.appendNode('developerConnection', 'scm:git@github.com:CirculoSiete/gen-ms-gradle-dev-plugin.git')
+        scm.appendNode('url', 'https://github.com/CirculoSiete/sb-service-chassis-plugin')
+        scm.appendNode('connection', 'scm:https://domixgithub.com/CirculoSiete/sb-service-chassis-plugin.git')
+        scm.appendNode('developerConnection', 'scm:git@github.com:CirculoSiete/sb-service-chassis-plugin.git')
 
         def license = root.appendNode('licenses').appendNode('license')
         license.appendNode('name', 'The Apache Software License, Version 2.0')
@@ -175,9 +175,9 @@ bintray {
     userOrg = 'circulosiete'
     name = project.name
     desc = project.description
-    websiteUrl = 'https://github.com/CirculoSiete/gen-ms-gradle-dev-plugin'
-    issueTrackerUrl = 'https://github.com/CirculoSiete/gen-ms-gradle-dev-plugin/issues'
-    vcsUrl = 'https://github.com/CirculoSiete/gen-ms-gradle-dev-plugin.git'
+    websiteUrl = 'https://github.com/CirculoSiete/sb-service-chassis-plugin'
+    issueTrackerUrl = 'https://github.com/CirculoSiete/sb-service-chassis-plugin/issues'
+    vcsUrl = 'https://github.com/CirculoSiete/sb-service-chassis-plugin.git'
     licenses = ['Apache-2.0']
     labels = ['gradle']
     publicDownloadNumbers = true
