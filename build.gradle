@@ -131,7 +131,7 @@ publishing {
         root.appendNode('name', project.pomName)
         root.appendNode('description', project.description)
         root.appendNode('url', 'https://github.com/CirculoSiete/sb-service-chassis-plugin')
-        root.appendNode('inceptionYear', '2016')
+        root.appendNode('inceptionYear', '2018')
         root.appendNode('packaging', 'jar')
 
         def scm = root.appendNode('scm')
