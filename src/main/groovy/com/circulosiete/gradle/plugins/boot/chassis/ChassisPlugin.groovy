@@ -47,8 +47,9 @@ class ChassisPlugin implements Plugin<Project> {
     logger.warn("Aplicando plugins...")
 
     [
-      "java", "eclipse", "idea", "com.bmuschko.docker-remote-api",
-      'org.springframework.boot', 'io.spring.dependency-management'
+      "java", 'jacoco', "eclipse", "idea", "com.bmuschko.docker-remote-api",
+      'org.springframework.boot', 'io.spring.dependency-management',
+      'com.github.ben-manes.versions'
     ].each { plugin ->
 
       project.getPlugins().apply(plugin)
@@ -64,7 +65,7 @@ class ChassisPlugin implements Plugin<Project> {
     project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-actuator:${ springBootVersion }")
     project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-web:${ springBootVersion }")
     project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-jdbc:${ springBootVersion }")
-    project.dependencies.add('implementation', "org.apache.commons:commons-lang3:3.1")
+    project.dependencies.add('implementation', "org.apache.commons:commons-lang3:3.8.1")
     //project.dependencies.add('implementation', "mysql:mysql-connector-java:5.1.46")
     project.dependencies.add('testRuntimeOnly', "org.springframework.boot:spring-boot-starter-test:${ springBootVersion }")
     //project.dependencies.add('implementation', "")
