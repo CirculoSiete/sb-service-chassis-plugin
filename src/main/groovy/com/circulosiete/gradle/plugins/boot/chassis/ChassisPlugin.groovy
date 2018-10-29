@@ -47,7 +47,7 @@ class ChassisPlugin implements Plugin<Project> {
     logger.warn("Aplicando plugins...")
 
     [
-      "java", 'jacoco', "eclipse", "idea", "com.bmuschko.docker-remote-api",
+      "java", 'jacoco', "eclipse", "eclipse-wtp", "idea", "com.bmuschko.docker-remote-api",
       'org.springframework.boot', 'io.spring.dependency-management',
       'com.github.ben-manes.versions'
     ].each { plugin ->
@@ -66,22 +66,31 @@ class ChassisPlugin implements Plugin<Project> {
     project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-web:${ springBootVersion }")
     project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-jdbc:${ springBootVersion }")
     project.dependencies.add('implementation', "org.apache.commons:commons-lang3:3.8.1")
-    //project.dependencies.add('implementation', "mysql:mysql-connector-java:5.1.46")
     project.dependencies.add('testRuntimeOnly', "org.springframework.boot:spring-boot-starter-test:${ springBootVersion }")
-    //project.dependencies.add('implementation', "")
-    //project.dependencies.add('implementation', "")
 
-    /*project.dependencies {
-      compile("")
-      compile("")
-      compile(group: '')
-      runtime('')
-      testCompile("")
-    }*/
-    /*project.buildscript.dependencies {
-      classpath("org.springframework.boot:spring-boot-gradle-plugin:${ springBootVersion }")
-    }*/
+    project.task([type: com.bmuschko.gradle.docker.tasks.image.Dockerfile, group: 'Docker', description: 'Crea el Dockerfile del Microservicio'], 'dockerfile') {
+      //TODO: agregar soporte para dependsOn personalizado
+      //dependsOn copyProps
 
+      destFile = project.file('build/libs/Dockerfile')
+      //TODO: hacer personalizable la imagen base
+      from 'openjdk:8u181-jre-slim-stretch'
 
+      label(['maintainer': 'AMIS dev@amis.org'])
+
+      //TODO: obtener archivo del fat gordo de Spring boot
+      //copyFile "jar_gordo.jar", '/opt/service.jar'
+
+      //TODO: agregar soporte para INSTRUCTIONS personalizadas
+      //Ejemplo de INSTRUCTIONS personalizadas
+      //copyFile "application.properties", '/application.properties'
+
+      //TODO: Agregar soporte para obtener el puerto
+      //exposePort 8060
+
+      //TODO: Agregar soporte para ejecutar la aplicación
+      //entryPoint 'java', "-Djava.awt.headless=true", "-Xms512m", "-Xmx512m", '-jar', '/opt/service.jar'
+
+    }
   }
 }
