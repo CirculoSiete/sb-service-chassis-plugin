@@ -6,5 +6,5 @@ La idea de este plugin es para facilitar la creación de microservicios con Spri
 
 * Soporte de actualización de versión de Spring Boot
 * Inclusión de plugins de soporte como:
- * Docker
- * Release
+  * Docker
+  * Release
