@@ -76,16 +76,12 @@ class ChassisPlugin implements Plugin<Project> {
     project.dependencies.add('testRuntimeOnly', "org.springframework.boot:spring-boot-starter-test:${ springBootVersion }")
 
     project.task([type: com.bmuschko.gradle.docker.tasks.image.Dockerfile, group: 'Docker', description: 'Crea el Dockerfile del Microservicio'], 'dockerfile') {
-
-
       dependsOn 'assemble'
 
       //TODO: agregar soporte para dependsOn personalizado
       //dependsOn copyProps
 
       destFile = project.file('build/libs/Dockerfile')
-      //TODO: hacer personalizable la imagen base
-
 
       def baseImage = dockerFile.from.get()
       project.logger.warn('Usando "{}" como imagen base.', baseImage)
