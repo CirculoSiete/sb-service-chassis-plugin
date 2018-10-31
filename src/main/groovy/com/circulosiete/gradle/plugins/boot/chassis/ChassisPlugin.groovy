@@ -19,13 +19,18 @@ package com.circulosiete.gradle.plugins.boot.chassis
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
+import org.gradle.api.plugins.ExtensionAware
 
 class ChassisPlugin implements Plugin<Project> {
 
   public static final String DEFAULT_SPRING_BOOT_VERSION = "2.0.6.RELEASE"
+  public static final String EXTENSION_NAME = 'service'
 
   @Override
   void apply(Project project) {
+    ChassisExtension chassisExtension = project.extensions.create(EXTENSION_NAME, ChassisExtension, project)
+    DockerFile dockerFile = ((ExtensionAware) chassisExtension).extensions.create('dockerfile', DockerFile, project)
+
     Logger logger = project.getLogger()
     String springBootVersion = Optional.ofNullable(project.properties['springBootVersion'])
       .orElse(DEFAULT_SPRING_BOOT_VERSION)
@@ -64,18 +69,27 @@ class ChassisPlugin implements Plugin<Project> {
 
     project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-actuator:${ springBootVersion }")
     project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-web:${ springBootVersion }")
-    project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-jdbc:${ springBootVersion }")
+    //project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-jdbc:${ springBootVersion }")
     project.dependencies.add('implementation', "org.apache.commons:commons-lang3:3.8.1")
+
+    //TODO: agregar mas dependencias para realizar pruebas (spock, etc)
     project.dependencies.add('testRuntimeOnly', "org.springframework.boot:spring-boot-starter-test:${ springBootVersion }")
 
     project.task([type: com.bmuschko.gradle.docker.tasks.image.Dockerfile, group: 'Docker', description: 'Crea el Dockerfile del Microservicio'], 'dockerfile') {
+
+
       dependsOn 'assemble'
+
       //TODO: agregar soporte para dependsOn personalizado
       //dependsOn copyProps
 
       destFile = project.file('build/libs/Dockerfile')
       //TODO: hacer personalizable la imagen base
-      from 'openjdk:8u181-jre-slim-stretch'
+
+
+      def baseImage = dockerFile.from.get()
+      project.logger.warn('Usando "{}" como imagen base.', baseImage)
+      from baseImage
 
       label(['maintainer': 'AMIS dev@amis.org'])
 
