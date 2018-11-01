@@ -25,11 +25,12 @@ class ChassisPlugin implements Plugin<Project> {
 
   public static final String DEFAULT_SPRING_BOOT_VERSION = "2.0.6.RELEASE"
   public static final String EXTENSION_NAME = 'service'
+  public static final String DOCKERFILE_EXTENSION_NAME = 'dockerfile'
 
   @Override
   void apply(Project project) {
     ChassisExtension chassisExtension = project.extensions.create(EXTENSION_NAME, ChassisExtension, project)
-    DockerFile dockerFile = ((ExtensionAware) chassisExtension).extensions.create('dockerfile', DockerFile, project)
+    DockerFile dockerFile = ((ExtensionAware) chassisExtension).extensions.create(DOCKERFILE_EXTENSION_NAME, DockerFile, project)
 
     Logger logger = project.getLogger()
     String springBootVersion = Optional.ofNullable(project.properties['springBootVersion'])
