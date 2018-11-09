@@ -23,7 +23,7 @@ import org.gradle.api.plugins.ExtensionAware
 
 class ChassisPlugin implements Plugin<Project> {
 
-  public static final String DEFAULT_SPRING_BOOT_VERSION = "2.0.6.RELEASE"
+  public static final String DEFAULT_SPRING_BOOT_VERSION = "2.1.0.RELEASE"
   public static final String EXTENSION_NAME = 'service'
   public static final String DOCKERFILE_EXTENSION_NAME = 'dockerfile'
 
