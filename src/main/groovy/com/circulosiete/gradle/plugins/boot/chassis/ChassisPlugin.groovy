@@ -23,7 +23,7 @@ import org.gradle.api.plugins.ExtensionAware
 
 class ChassisPlugin implements Plugin<Project> {
 
-  public static final String DEFAULT_SPRING_BOOT_VERSION = "2.1.0.RELEASE"
+  public static final String DEFAULT_SPRING_BOOT_VERSION = '2.1.0.RELEASE'
   public static final String EXTENSION_NAME = 'service'
   public static final String DOCKERFILE_EXTENSION_NAME = 'dockerfile'
 
@@ -37,12 +37,12 @@ class ChassisPlugin implements Plugin<Project> {
       .orElse(DEFAULT_SPRING_BOOT_VERSION)
 
     if (!springBootVersion.equals(DEFAULT_SPRING_BOOT_VERSION)) {
-      logger.warn("Se ha detectado diferente versión de Spring Boot en el proyecto.")
-      logger.warn("\tVersión default de  Spring Boot: {}", DEFAULT_SPRING_BOOT_VERSION)
-      logger.warn("\tVersión definida en el proyecto: {}\n", springBootVersion)
+      logger.warn('Se ha detectado diferente versión de Spring Boot en el proyecto.')
+      logger.warn('\tVersión default de  Spring Boot: {}', DEFAULT_SPRING_BOOT_VERSION)
+      logger.warn('\tVersión definida en el proyecto: {}\n', springBootVersion)
     }
 
-    logger.warn("Spring Boot version: {}\n", springBootVersion)
+    logger.warn('Spring Boot version: {}\n', springBootVersion)
 
     project.buildscript.repositories {
       jcenter()
@@ -50,7 +50,7 @@ class ChassisPlugin implements Plugin<Project> {
       mavenLocal()
     }
 
-    logger.warn("Aplicando plugins...")
+    logger.warn('Aplicando plugins...')
 
     [
       "java", 'jacoco', "eclipse", "eclipse-wtp", "idea", "com.bmuschko.docker-remote-api",
