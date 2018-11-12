@@ -29,7 +29,7 @@ class ChassisPlugin implements Plugin<Project> {
 
   @Override
   void apply(Project project) {
-    ChassisExtension chassisExtension = project.extensions.create(EXTENSION_NAME, ChassisExtension, project)
+    ChassisExtension chassisExtension = createExtension(project)
     DockerFile dockerFile = ((ExtensionAware) chassisExtension).extensions.create(DOCKERFILE_EXTENSION_NAME, DockerFile, project)
 
     Logger logger = project.getLogger()
@@ -104,5 +104,9 @@ class ChassisPlugin implements Plugin<Project> {
       //entryPoint 'java', "-Djava.awt.headless=true", "-Xms512m", "-Xmx512m", '-jar', '/opt/service.jar'
 
     }
+  }
+
+  private ChassisExtension createExtension(Project project) {
+    project.extensions.create(EXTENSION_NAME, ChassisExtension, project)
   }
 }
