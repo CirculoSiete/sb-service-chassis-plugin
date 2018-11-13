@@ -70,11 +70,12 @@ class ChassisPlugin implements Plugin<Project> {
 
     project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-actuator:${ springBootVersion }")
     project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-web:${ springBootVersion }")
-    //project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-jdbc:${ springBootVersion }")
     project.dependencies.add('implementation', 'org.apache.commons:commons-lang3:3.8.1')
 
     //TODO: agregar mas dependencias para realizar pruebas (spock, etc)
     project.dependencies.add('testRuntimeOnly', "org.springframework.boot:spring-boot-starter-test:${ springBootVersion }")
+
+
 
     project.task([type: com.bmuschko.gradle.docker.tasks.image.Dockerfile, group: 'Docker', description: 'Crea el Dockerfile del Microservicio'], 'dockerfile') {
       dependsOn 'assemble'
@@ -90,8 +91,7 @@ class ChassisPlugin implements Plugin<Project> {
 
       label(['maintainer': 'AMIS dev@amis.org'])
 
-      //TODO: obtener archivo del fat gordo de Spring boot
-      //copyFile "jar_gordo.jar", '/opt/service.jar'
+      copyFile getFatJarName(project), '/opt/service.jar'
 
       //TODO: agregar soporte para INSTRUCTIONS personalizadas
       //Ejemplo de INSTRUCTIONS personalizadas
@@ -104,6 +104,13 @@ class ChassisPlugin implements Plugin<Project> {
       //entryPoint 'java', "-Djava.awt.headless=true", "-Xms512m", "-Xmx512m", '-jar', '/opt/service.jar'
 
     }
+  }
+
+  private String getFatJarName(Project project) {
+    def jar = project.getTasks().getByPath('jar')
+    def lo = new File('build/libs/')
+    String path = jar.archivePath.path
+    path.replaceAll(lo.absolutePath + "/", '')
   }
 
   private ChassisExtension createExtension(Project project) {
