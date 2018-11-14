@@ -91,11 +91,11 @@ class ChassisPlugin implements Plugin<Project> {
 
       label(['maintainer': 'AMIS dev@amis.org'])
 
-      copyFile getFatJarName(project), '/opt/service.jar'
-
       //TODO: agregar soporte para INSTRUCTIONS personalizadas
       //Ejemplo de INSTRUCTIONS personalizadas
       //copyFile "application.properties", '/application.properties'
+
+      copyFile getFatJarName(project), '/opt/service.jar'
 
       //TODO: Agregar soporte para obtener el puerto
       //exposePort 8060
@@ -110,7 +110,7 @@ class ChassisPlugin implements Plugin<Project> {
     def jar = project.getTasks().getByPath('jar')
     def lo = new File('build/libs/')
     String path = jar.archivePath.path
-    path.replaceAll(lo.absolutePath + "/", '')
+    path.replaceAll("$lo.absolutePath/", '')
   }
 
   private ChassisExtension createExtension(Project project) {
