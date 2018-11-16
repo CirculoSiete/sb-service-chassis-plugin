@@ -104,6 +104,13 @@ class ChassisPlugin implements Plugin<Project> {
       //entryPoint 'java', "-Djava.awt.headless=true", "-Xms512m", "-Xmx512m", '-jar', '/opt/service.jar'
 
     }
+
+    project.task([type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage, group: 'Docker', description: 'Construye la imagen de Docker del Microservicio'], 'buildImage') {
+      inputDir = project.tasks.getByName('dockerfile').destFile.get().asFile.parentFile
+      tag = "domix/wonky:${ project.version }".toLowerCase()
+    }
+
+    project.tasks.getByName('buildImage').dependsOn('dockerfile')
   }
 
   private String getFatJarName(Project project) {
