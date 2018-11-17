@@ -47,7 +47,7 @@ dependencies {
   compile localGroovy()
   //compile 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
   compile 'com.bmuschko:gradle-docker-plugin:4.0.5'
-  //compile 'org.yaml:snakeyaml:1.18'
+  compile 'org.yaml:snakeyaml:1.23'
   compile 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2'
   compile 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
   compile 'net.researchgate:gradle-release:2.7.0'

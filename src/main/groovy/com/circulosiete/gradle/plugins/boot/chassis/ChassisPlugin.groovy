@@ -20,6 +20,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
 import org.gradle.api.plugins.ExtensionAware
+import org.yaml.snakeyaml.Yaml
 
 class ChassisPlugin implements Plugin<Project> {
 
@@ -97,8 +98,9 @@ class ChassisPlugin implements Plugin<Project> {
 
       copyFile getFatJarName(project), '/opt/service.jar'
 
-      //TODO: Agregar soporte para obtener el puerto
-      //exposePort 8060
+      def applicationPort = getApplicationPort(project)
+      exposePort applicationPort
+      //TODO: Agregar soporte para obtener el puerto de administración
 
       //TODO: Agregar soporte para ejecutar la aplicación
       //entryPoint 'java', "-Djava.awt.headless=true", "-Xms512m", "-Xmx512m", '-jar', '/opt/service.jar'
@@ -111,6 +113,59 @@ class ChassisPlugin implements Plugin<Project> {
     }
 
     project.tasks.getByName('buildImage').dependsOn('dockerfile')
+  }
+
+
+  private Integer getApplicationPort(Project project) {
+    def result = 8080
+
+    def propertiesFilePath = './src/main/resources/application.properties'
+    def propertiesFile = new File(propertiesFilePath)
+    def yamlFilePath = './src/main/resources/application.yaml'
+    def ymlFilePath = './src/main/resources/application.yml'
+
+    if (propertiesFile.exists()) {
+      Properties properties = new Properties()
+      propertiesFile.withInputStream {
+        properties.load(it)
+      }
+
+      result = Optional.ofNullable(properties['server.port'])
+        .filter { it instanceof String }
+        .map { (String) it }
+        .filter({ it.isNumber() })
+        .map {
+        def port = Integer.valueOf(it)
+        project.logger.warn('Defined port in properties file: {}', port)
+        port
+      }.orElse(result)
+    } else {
+      def yamlFile = new File(yamlFilePath)
+
+
+      if (!yamlFile.exists()) {
+        yamlFile = new File(ymlFilePath)
+      }
+
+      if (yamlFile.exists()) {
+        Yaml parser = new Yaml()
+        result = Optional.ofNullable(parser.load(yamlFile.text)).map({
+          Optional.ofNullable(it['server.port'])
+            .filter {
+              it instanceof Integer
+            }.map {
+              project.logger.warn('Defined port in yaml file: {}', it)
+              it
+            }
+            .orElse(result)
+        }).orElse(result)
+
+      }
+    }
+
+    project.logger.warn('Application using port {}', result)
+
+    result
   }
 
   private String getFatJarName(Project project) {
