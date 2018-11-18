@@ -135,13 +135,12 @@ class ChassisPlugin implements Plugin<Project> {
         .map { (String) it }
         .filter({ it.isNumber() })
         .map {
-        def port = Integer.valueOf(it)
-        project.logger.warn('Defined port in properties file: {}', port)
-        port
-      }.orElse(result)
+          def port = Integer.valueOf(it)
+          project.logger.warn('Defined port in properties file: {}', port)
+          port
+        }.orElse(result)
     } else {
       def yamlFile = new File(yamlFilePath)
-
 
       if (!yamlFile.exists()) {
         yamlFile = new File(ymlFilePath)
@@ -159,7 +158,6 @@ class ChassisPlugin implements Plugin<Project> {
             }
             .orElse(result)
         }).orElse(result)
-
       }
     }
 
