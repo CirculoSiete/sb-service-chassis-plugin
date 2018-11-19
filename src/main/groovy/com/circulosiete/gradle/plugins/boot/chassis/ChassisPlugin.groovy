@@ -103,7 +103,7 @@ class ChassisPlugin implements Plugin<Project> {
       //TODO: Agregar soporte para obtener el puerto de administración
 
       //TODO: Agregar soporte para ejecutar la aplicación
-      //entryPoint 'java', "-Djava.awt.headless=true", "-Xms512m", "-Xmx512m", '-jar', '/opt/service.jar'
+      entryPoint 'java', "-Djava.awt.headless=true", "-Xms256m", "-Xmx256m", '-jar', '/opt/service.jar'
 
     }
 
