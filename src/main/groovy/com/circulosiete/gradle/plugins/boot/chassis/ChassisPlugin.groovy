@@ -102,7 +102,7 @@ class ChassisPlugin implements Plugin<Project> {
       exposePort applicationPort
       //TODO: Agregar soporte para obtener el puerto de administración
 
-      //TODO: Agregar soporte para ejecutar la aplicación
+      //TODO: Agregar soporte para parámetros personalizados a la JVM y a la aplicación Spring
       entryPoint 'java', "-Djava.awt.headless=true", "-Xms256m", "-Xmx256m", '-jar', '/opt/service.jar'
 
     }
