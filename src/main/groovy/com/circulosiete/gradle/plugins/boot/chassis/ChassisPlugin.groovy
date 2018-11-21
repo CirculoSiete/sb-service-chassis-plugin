@@ -60,7 +60,7 @@ class ChassisPlugin implements Plugin<Project> {
     ].each { plugin ->
 
       project.getPlugins().apply(plugin)
-      logger.warn("* {}", plugin)
+      logger.warn(" * {}", plugin)
     }
 
     project.repositories {
