@@ -89,6 +89,7 @@ class ChassisPlugin implements Plugin<Project> {
       def baseImage = dockerFile.from.get()
       project.logger.warn('Usando "{}" como imagen base.', baseImage)
       from baseImage
+      //TODO: agregar soporte para actualizar paquetes de la imagen base
 
       label(['maintainer': 'AMIS dev@amis.org'])
 
@@ -110,7 +111,10 @@ class ChassisPlugin implements Plugin<Project> {
     project.task([type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage, group: 'Docker', description: 'Construye la imagen de Docker del Microservicio'], 'buildImage') {
       inputDir = project.tasks.getByName('dockerfile').destFile.get().asFile.parentFile
       tag = "domix/wonky:${ project.version }".toLowerCase()
+      //TODO: mejorar la generación de la imagen. Considerar la configuración del tag.
     }
+
+    //TODO: tarea para empujar la imagen al repositorio remoto
 
     project.tasks.getByName('buildImage').dependsOn('dockerfile')
   }
