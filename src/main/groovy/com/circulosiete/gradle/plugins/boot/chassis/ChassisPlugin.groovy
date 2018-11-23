@@ -109,9 +109,33 @@ class ChassisPlugin implements Plugin<Project> {
     }
 
     project.task([type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage, group: 'Docker', description: 'Construye la imagen de Docker del Microservicio'], 'buildImage') {
+      def repositoryName = project.name.replace(' ', '').toLowerCase()
+      project.logger.warn('repositoryName: {}', repositoryName)
+      def registryOwner = ((System.getenv('DOCKER_BUILDER_REGISTRY_OWNER') ?: (project.hasProperty('dockerRegistryOwner') ? project.property('dockerRegistryOwner') : '')) ?: '') ?: (System.getenv('DOCKER_BUILDER_USERNAME') ?: (project.hasProperty('dockerRegistryUsername') ? project.property('dockerRegistryUsername') : '')) ?: ''
+      project.logger.warn('registryOwner: {}', registryOwner)
+
+      if (!registryOwner) {
+        //TODO: mejorar el reporte de este error.
+        throw new RuntimeException('Se debe espeficar alguna de las siguientes variables de ambiente: DOCKER_BUILDER_REGISTRY_OWNER o DOCKER_BUILDER_USERNAME')
+      }
+
+      def registryHost = (System.getenv('DOCKER_BUILDER_REGISTRY_HOST') ?: (project.hasProperty('dockerRegistryHost') ? project.property('dockerRegistryHost') : '')) ?: ''
+
+      if (registryHost) {
+        registryHost = registryHost + "/"
+      }
+
+      def tagVersion = project.version
+      def buildNumber = System.getenv('BUILD_NUMBER')
+      if (buildNumber) {
+        tagVersion += "_build_ci_${ buildNumber }"
+      }
+
       inputDir = project.tasks.getByName('dockerfile').destFile.get().asFile.parentFile
-      tag = "domix/wonky:${ project.version }".toLowerCase()
-      //TODO: mejorar la generación de la imagen. Considerar la configuración del tag.
+
+      def finalTag = "${ registryHost }${ registryOwner }/${ repositoryName }:${ tagVersion }".toLowerCase()
+      project.logger.warn('Created Image with tag: {}', finalTag)
+      tag = finalTag
     }
 
     //TODO: tarea para empujar la imagen al repositorio remoto
@@ -139,10 +163,10 @@ class ChassisPlugin implements Plugin<Project> {
         .map { (String) it }
         .filter({ it.isNumber() })
         .map {
-          def port = Integer.valueOf(it)
-          project.logger.warn('Defined port in properties file: {}', port)
-          port
-        }.orElse(result)
+        def port = Integer.valueOf(it)
+        project.logger.warn('Defined port in properties file: {}', port)
+        port
+      }.orElse(result)
     } else {
       def yamlFile = new File(yamlFilePath)
 
@@ -155,12 +179,12 @@ class ChassisPlugin implements Plugin<Project> {
         result = Optional.ofNullable(parser.load(yamlFile.text)).map({
           Optional.ofNullable(it['server.port'])
             .filter {
-              it instanceof Integer
-            }.map {
-              project.logger.warn('Defined port in yaml file: {}', it)
-              it
-            }
-            .orElse(result)
+            it instanceof Integer
+          }.map {
+            project.logger.warn('Defined port in yaml file: {}', it)
+            it
+          }
+          .orElse(result)
         }).orElse(result)
       }
     }
