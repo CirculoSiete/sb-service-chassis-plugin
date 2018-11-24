@@ -140,6 +140,10 @@ class ChassisPlugin implements Plugin<Project> {
 
     //TODO: tarea para empujar la imagen al repositorio remoto
 
+    //TODO: tarea para generar Jenkinsfile
+
+    //TODO: tarea para desplegar
+
     project.tasks.getByName('buildImage').dependsOn('dockerfile')
   }
 
