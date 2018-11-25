@@ -167,10 +167,10 @@ class ChassisPlugin implements Plugin<Project> {
         .map { (String) it }
         .filter({ it.isNumber() })
         .map {
-        def port = Integer.valueOf(it)
-        project.logger.warn('Defined port in properties file: {}', port)
-        port
-      }.orElse(result)
+          def port = Integer.valueOf(it)
+          project.logger.warn('Defined port in properties file: {}', port)
+          port
+        }.orElse(result)
     } else {
       def yamlFile = new File(yamlFilePath)
 
@@ -182,14 +182,12 @@ class ChassisPlugin implements Plugin<Project> {
         Yaml parser = new Yaml()
         result = Optional.ofNullable(parser.load(yamlFile.text)).map({
           Optional.ofNullable(it['server.port'])
-            .filter {
-            it instanceof Integer
-          }.map {
-            project.logger.warn('Defined port in yaml file: {}', it)
-            it
-          }
-          .orElse(result)
-        }).orElse(result)
+            .filter { it instanceof Integer }
+            .map {
+              project.logger.warn('Defined port in yaml file: {}', it)
+              it
+            }.orElse(result)
+          }).orElse(result)
       }
     }
 
