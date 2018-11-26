@@ -21,6 +21,7 @@ import org.gradle.api.Project
 import org.gradle.api.logging.Logger
 import org.gradle.api.plugins.ExtensionAware
 import org.yaml.snakeyaml.Yaml
+import at.phatbl.shellexec.ShellExec
 
 class ChassisPlugin implements Plugin<Project> {
 
@@ -49,6 +50,9 @@ class ChassisPlugin implements Plugin<Project> {
       jcenter()
       mavenCentral()
       mavenLocal()
+      maven {
+        url "https://plugins.gradle.org/m2/"
+      }
     }
 
     logger.warn('Aplicando plugins...')
@@ -139,6 +143,10 @@ class ChassisPlugin implements Plugin<Project> {
     }
 
     //TODO: tarea para empujar la imagen al repositorio remoto
+    project.task([type: at.phatbl.shellexec.ShellExec, group: 'Deployment', description: 'Despliega el Microservicio'], 'deploy') {
+      'command -v gcloud'.execute()
+      command 'ls -l'
+    }
 
     //TODO: tarea para generar Jenkinsfile
 
