@@ -21,7 +21,6 @@ import org.gradle.api.Project
 import org.gradle.api.logging.Logger
 import org.gradle.api.plugins.ExtensionAware
 import org.yaml.snakeyaml.Yaml
-import at.phatbl.shellexec.ShellExec
 
 class ChassisPlugin implements Plugin<Project> {
 
