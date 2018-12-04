@@ -24,7 +24,7 @@ import org.yaml.snakeyaml.Yaml
 
 class ChassisPlugin implements Plugin<Project> {
 
-  public static final String DEFAULT_SPRING_BOOT_VERSION = '2.1.0.RELEASE'
+  public static final String DEFAULT_SPRING_BOOT_VERSION = '2.1.1.RELEASE'
   public static final String EXTENSION_NAME = 'service'
   public static final String DOCKERFILE_EXTENSION_NAME = 'dockerfile'
 
@@ -34,8 +34,7 @@ class ChassisPlugin implements Plugin<Project> {
     DockerFile dockerFile = ((ExtensionAware) chassisExtension).extensions.create(DOCKERFILE_EXTENSION_NAME, DockerFile, project)
 
     Logger logger = project.getLogger()
-    String springBootVersion = Optional.ofNullable(project.properties['springBootVersion'])
-      .orElse(DEFAULT_SPRING_BOOT_VERSION)
+    String springBootVersion = DEFAULT_SPRING_BOOT_VERSION
 
     if (!springBootVersion.equals(DEFAULT_SPRING_BOOT_VERSION)) {
       logger.warn('Se ha detectado diferente versión de Spring Boot en el proyecto.')
