@@ -27,6 +27,7 @@ class ChassisPlugin implements Plugin<Project> {
   public static final String DEFAULT_SPRING_BOOT_VERSION = '2.1.1.RELEASE'
   public static final String EXTENSION_NAME = 'service'
   public static final String DOCKERFILE_EXTENSION_NAME = 'dockerfile'
+  public final static String LINE_SEPARATOR = "*" * 60
 
   @Override
   void apply(Project project) {
@@ -79,7 +80,6 @@ class ChassisPlugin implements Plugin<Project> {
     project.dependencies.add('testRuntimeOnly', "org.springframework.boot:spring-boot-starter-test:${ springBootVersion }")
 
 
-
     project.task([type: com.bmuschko.gradle.docker.tasks.image.Dockerfile, group: 'Docker', description: 'Crea el Dockerfile del Microservicio'], 'dockerfile') {
       dependsOn 'assemble'
 
@@ -117,10 +117,18 @@ class ChassisPlugin implements Plugin<Project> {
       project.logger.warn('registryOwner: {}', registryOwner)
 
       if (!registryOwner) {
-        //TODO: mejorar el reporte de este error.
-        String error = 'No se encontro configurado \n' +
-          'los parámetros de Docker requeridos: \n\n' + 'Se debe espeficar alguna de las siguientes variables de ambiente: ' +
-          'DOCKER_BUILDER_REGISTRY_OWNER o DOCKER_BUILDER_USERNAME'
+        String error = LINE_SEPARATOR + '\nCONFIGURACION DE DOCKER FALTANTE. \n' + LINE_SEPARATOR + '\n\n' +
+          'Es necesario especificar el "Owner del repositorio". \n' +
+          'Esto se puede hacer mediante 2 formas: \n\n' +
+          '1. Agregar en el archivo global de configuracion de \n' +
+          '   Gradle ($HOME/.gradle/gradle.properties),\n' +
+          '   la propiedad "dockerRegistryUsername". Ejemplo:\n\n' +
+          '     dockerRegistryUsername=foo\n\n' +
+          '   NOTA: el archivo puede no existir, crearlo si no existe.\n\n' +
+          '2. Agregar una variable de ambiente llamada DOCKER_BUILDER_REGISTRY_OWNER\n' +
+          '   Ejemplo: \n\n' +
+          '   $ export DOCKER_BUILDER_REGISTRY_OWNER=foo'
+
         throw new RuntimeException(error)
       }
 
@@ -176,10 +184,10 @@ class ChassisPlugin implements Plugin<Project> {
         .map { (String) it }
         .filter({ it.isNumber() })
         .map {
-          def port = Integer.valueOf(it)
-          project.logger.warn('Defined port in properties file: {}', port)
-          port
-        }.orElse(result)
+        def port = Integer.valueOf(it)
+        project.logger.warn('Defined port in properties file: {}', port)
+        port
+      }.orElse(result)
     } else {
       def yamlFile = new File(yamlFilePath)
 
@@ -193,10 +201,10 @@ class ChassisPlugin implements Plugin<Project> {
           Optional.ofNullable(it['server.port'])
             .filter { it instanceof Integer }
             .map {
-              project.logger.warn('Defined port in yaml file: {}', it)
-              it
-            }.orElse(result)
-          }).orElse(result)
+            project.logger.warn('Defined port in yaml file: {}', it)
+            it
+          }.orElse(result)
+        }).orElse(result)
       }
     }
 
