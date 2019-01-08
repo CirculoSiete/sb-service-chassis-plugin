@@ -118,7 +118,10 @@ class ChassisPlugin implements Plugin<Project> {
 
       if (!registryOwner) {
         //TODO: mejorar el reporte de este error.
-        throw new RuntimeException('Se debe espeficar alguna de las siguientes variables de ambiente: DOCKER_BUILDER_REGISTRY_OWNER o DOCKER_BUILDER_USERNAME')
+        String error = 'No se encontro configurado \n' +
+          'los parámetros de Docker requeridos: \n\n' + 'Se debe espeficar alguna de las siguientes variables de ambiente: ' +
+          'DOCKER_BUILDER_REGISTRY_OWNER o DOCKER_BUILDER_USERNAME'
+        throw new RuntimeException(error)
       }
 
       def registryHost = (System.getenv('DOCKER_BUILDER_REGISTRY_HOST') ?: (project.hasProperty('dockerRegistryHost') ? project.property('dockerRegistryHost') : '')) ?: ''
