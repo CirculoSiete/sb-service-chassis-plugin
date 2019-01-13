@@ -148,7 +148,7 @@ class ChassisPlugin implements Plugin<Project> {
 
       def finalTag = "${ registryHost }${ registryOwner }/${ repositoryName }:${ tagVersion }".toLowerCase()
       project.logger.warn('Created Image with tag: {}', finalTag)
-      tag = finalTag
+      tags = [finalTag]
     }
 
     //TODO: tarea para empujar la imagen al repositorio remoto
