@@ -24,7 +24,8 @@ import org.yaml.snakeyaml.Yaml
 
 class ChassisPlugin implements Plugin<Project> {
 
-  public static final String DEFAULT_SPRING_BOOT_VERSION = '2.1.2.RELEASE'
+  public static final String DEFAULT_SPRING_BOOT_VERSION = '2.1.3.RELEASE'
+  public static final String DEFAULT_SPRING_CLOUD_VERSION = 'Greenwich.SR1'
   public static final String EXTENSION_NAME = 'service'
   public static final String DOCKERFILE_EXTENSION_NAME = 'dockerfile'
   public final static String LINE_SEPARATOR = "*" * 60
@@ -36,6 +37,7 @@ class ChassisPlugin implements Plugin<Project> {
 
     Logger logger = project.getLogger()
     String springBootVersion = DEFAULT_SPRING_BOOT_VERSION
+    String springCloudVersion = DEFAULT_SPRING_CLOUD_VERSION
 
     if (!springBootVersion.equals(DEFAULT_SPRING_BOOT_VERSION)) {
       logger.warn('Se ha detectado diferente versión de Spring Boot en el proyecto.')
@@ -43,7 +45,8 @@ class ChassisPlugin implements Plugin<Project> {
       logger.warn('\tVersión definida en el proyecto: {}\n', springBootVersion)
     }
 
-    logger.warn('Spring Boot version: {}\n', springBootVersion)
+    logger.warn('Spring Boot version:  {}', springBootVersion)
+    logger.warn('Spring Cloud version: {}\n', springCloudVersion)
 
     project.buildscript.repositories {
       jcenter()
@@ -70,6 +73,13 @@ class ChassisPlugin implements Plugin<Project> {
       jcenter()
       mavenCentral()
       mavenLocal()
+      maven { url 'https://repo.spring.io/milestone' }
+    }
+
+    project.dependencyManagement {
+      imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+      }
     }
 
     project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-actuator:${ springBootVersion }")
@@ -77,7 +87,8 @@ class ChassisPlugin implements Plugin<Project> {
     project.dependencies.add('implementation', 'org.apache.commons:commons-lang3:3.8.1')
 
     //TODO: agregar mas dependencias para realizar pruebas (spock, etc)
-    project.dependencies.add('testRuntimeOnly', "org.springframework.boot:spring-boot-starter-test:${ springBootVersion }")
+    project.dependencies.add('testImplementation', "org.springframework.boot:spring-boot-starter-test:${ springBootVersion }")
+     //'org.springframework.boot:spring-boot-starter-test'
 
 
     project.task([type: com.bmuschko.gradle.docker.tasks.image.Dockerfile, group: 'Docker', description: 'Crea el Dockerfile del Microservicio'], 'dockerfile') {
@@ -172,6 +183,7 @@ class ChassisPlugin implements Plugin<Project> {
     def propertiesFile = new File(propertiesFilePath)
     def yamlFilePath = './src/main/resources/application.yaml'
     def ymlFilePath = './src/main/resources/application.yml'
+    println "foo port"
 
     if (propertiesFile.exists()) {
       Properties properties = new Properties()
