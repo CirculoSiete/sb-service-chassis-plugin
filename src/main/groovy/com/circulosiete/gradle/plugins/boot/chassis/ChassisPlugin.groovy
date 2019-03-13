@@ -82,14 +82,15 @@ class ChassisPlugin implements Plugin<Project> {
       }
     }
 
+    project.dependencies.add('compileOnly', "org.projectlombok:lombok")
+    project.dependencies.add('annotationProcessor', "org.projectlombok:lombok")
+
     project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-actuator:${ springBootVersion }")
     project.dependencies.add('implementation', "org.springframework.boot:spring-boot-starter-web:${ springBootVersion }")
     project.dependencies.add('implementation', 'org.apache.commons:commons-lang3:3.8.1')
 
     //TODO: agregar mas dependencias para realizar pruebas (spock, etc)
     project.dependencies.add('testImplementation', "org.springframework.boot:spring-boot-starter-test:${ springBootVersion }")
-     //'org.springframework.boot:spring-boot-starter-test'
-
 
     project.task([type: com.bmuschko.gradle.docker.tasks.image.Dockerfile, group: 'Docker', description: 'Crea el Dockerfile del Microservicio'], 'dockerfile') {
       dependsOn 'assemble'
