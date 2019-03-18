@@ -16,6 +16,8 @@
  */
 package com.circulosiete.gradle.plugins.boot.chassis
 
+import de.vandermeer.asciitable.AsciiTable
+import de.vandermeer.skb.interfaces.document.TableRowStyle
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
@@ -81,7 +83,7 @@ class ChassisPlugin implements Plugin<Project> {
 
     project.dependencyManagement {
       imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${ springCloudVersion }"
       }
     }
 
@@ -180,11 +182,11 @@ class ChassisPlugin implements Plugin<Project> {
       tag = theTag
       def ci = System.getenv('CI') == "true"
       def enabledPush = true
-      if(ci && project.version.toString().toLowerCase().endsWith("snapshot")) {
+      if (ci && project.version.toString().toLowerCase().endsWith("snapshot")) {
         enabledPush = false
       }
       enabled = enabledPush
-      println "Push enabled: ${enabled}"
+      println "Push enabled: ${ enabled }"
     }
 
     //TODO: tarea para empujar la imagen al repositorio remoto
@@ -199,37 +201,35 @@ class ChassisPlugin implements Plugin<Project> {
 
     project.tasks.getByName('buildImage').dependsOn('dockerfile')
 
-
-    /*docker {
-      registryCredentials {
-
-
-      }
-    }*/
-
-    if (project.hasProperty('registryUrl')) {
-      project.ext.registryUrl = project.property('registryUrl')
-    } else {
-      project.ext.registryUrl = 'https://hub.docker.com'
-    }
+    project.ext.registryUrl = (System.getenv('CONTAINER_REGISTRY_URL') ?:
+      project.properties.getOrDefault('containerRegistryUrl', ''))
+    project.ext.registryUsername = (System.getenv('CONTAINER_REGISTRY_USERNAME') ?:
+      project.properties.getOrDefault('containerRegistryUsername', ''))
+    project.ext.registryPassword = (System.getenv('CONTAINER_REGISTRY_PASSWORD') ?:
+      project.properties.getOrDefault('containerRegistryPassword', ''))
+    //TODO: informar como se obtuvieron los valores del Container Registry, para fines de depuracion
 
 
-    if (project.hasProperty('registryUsername')) {
-      project.ext.registryUsername = project.property('registryUsername')
-    } else {
-      project.ext.registryUsername = ''
-    }
+    AsciiTable at = new AsciiTable()
 
-    if (project.hasProperty('registryPassword')) {
-      project.ext.registryPassword = project.property('registryPassword')
-    } else {
-      project.ext.registryPassword = ''
-    }
+    at.addRule()
+    at.addRow("Container Registry","")
+    at.addRule()
+    at.addRow("Registry URL", project.ext.registryUrl)
+    at.addRule()
+    at.addRow("Registry username", project.ext.registryUsername)
+    at.addRule()
+    at.addRow("Registry password", '*' * project.ext.registryPassword.length())
+    at.addRule()
+    String rend = at.render()
+
+    logger.warn(rend)
+
 
     def dockerExtension = project.extensions.getByName('docker')
 
     dockerExtension.registryCredentials {
-      //url = project.ext.registryUrl
+      url = project.ext.registryUrl
       username = project.ext.registryUsername
       password = project.ext.registryPassword
     }
