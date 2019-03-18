@@ -39,6 +39,9 @@ class ChassisPlugin implements Plugin<Project> {
     String springBootVersion = DEFAULT_SPRING_BOOT_VERSION
     String springCloudVersion = DEFAULT_SPRING_CLOUD_VERSION
 
+    String theTag
+    String theImageName
+
     if (!springBootVersion.equals(DEFAULT_SPRING_BOOT_VERSION)) {
       logger.warn('Se ha detectado diferente versión de Spring Boot en el proyecto.')
       logger.warn('\tVersión default de  Spring Boot: {}', DEFAULT_SPRING_BOOT_VERSION)
@@ -158,9 +161,30 @@ class ChassisPlugin implements Plugin<Project> {
 
       inputDir = project.tasks.getByName('dockerfile').destFile.get().asFile.parentFile
 
-      def finalTag = "${ registryHost }${ registryOwner }/${ repositoryName }:${ tagVersion }".toLowerCase()
+      def imageNameInLowerCase = "${ registryHost }${ registryOwner }/${ repositoryName }".toLowerCase()
+
+      def finalTag = "${ imageNameInLowerCase }:${ tagVersion }".toLowerCase()
+
+
+      theTag = tagVersion
+      theImageName = imageNameInLowerCase
+
       project.logger.warn('Created Image with tag: {}', finalTag)
       tags = [finalTag]
+    }
+
+    project.task([type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage, group: 'Docker', description: 'Empuja la imagen del Contenedor al Registro'], 'pushImage') {
+      dependsOn 'buildImage'
+      def im = project.tasks.getByName('buildImage').tags.get().first()
+      imageName = theImageName
+      tag = theTag
+      def ci = System.getenv('CI') == "true"
+      def enabledPush = true
+      if(ci && project.version.toString().toLowerCase().endsWith("snapshot")) {
+        enabledPush = false
+      }
+      enabled = enabledPush
+      println "Push enabled: ${enabled}"
     }
 
     //TODO: tarea para empujar la imagen al repositorio remoto
@@ -174,8 +198,42 @@ class ChassisPlugin implements Plugin<Project> {
     //TODO: tarea para desplegar
 
     project.tasks.getByName('buildImage').dependsOn('dockerfile')
-  }
 
+
+    /*docker {
+      registryCredentials {
+
+
+      }
+    }*/
+
+    if (project.hasProperty('registryUrl')) {
+      project.ext.registryUrl = project.property('registryUrl')
+    } else {
+      project.ext.registryUrl = 'https://hub.docker.com'
+    }
+
+
+    if (project.hasProperty('registryUsername')) {
+      project.ext.registryUsername = project.property('registryUsername')
+    } else {
+      project.ext.registryUsername = ''
+    }
+
+    if (project.hasProperty('registryPassword')) {
+      project.ext.registryPassword = project.property('registryPassword')
+    } else {
+      project.ext.registryPassword = ''
+    }
+
+    def dockerExtension = project.extensions.getByName('docker')
+
+    dockerExtension.registryCredentials {
+      //url = project.ext.registryUrl
+      username = project.ext.registryUsername
+      password = project.ext.registryPassword
+    }
+  }
 
   private Integer getApplicationPort(Project project) {
     def result = 8080
