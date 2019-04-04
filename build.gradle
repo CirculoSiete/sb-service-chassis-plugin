@@ -46,7 +46,7 @@ repositories {
 dependencies {
   compile gradleApi()
   compile localGroovy()
-  compile 'com.bmuschko:gradle-docker-plugin:4.6.2'
+  compile 'com.bmuschko:gradle-docker-plugin:4.7.0'
   compile 'org.yaml:snakeyaml:1.24'
   compile 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622'
   compile "com.github.ben-manes:gradle-versions-plugin:${versionsPluginVersion}"
