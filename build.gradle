@@ -164,8 +164,8 @@ publishing {
 }
 
 bintray {
-  user = project.hasProperty('bintrayUsername') ? bintrayUsername : ''
-  key = project.hasProperty('bintrayApiKey') ? bintrayApiKey : ''
+  user = (System.getenv('BINTRAY_USERNAME') ?: project.properties.getOrDefault('bintrayUsername', ''))
+  key = (System.getenv('BINTRAY_APIKEY') ?: project.properties.getOrDefault('bintrayApiKey', ''))
 
   publications = ['mavenJava']
   dryRun = false //Whether to run this as dry-run, without deploying
