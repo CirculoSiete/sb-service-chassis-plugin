@@ -188,7 +188,7 @@ bintray {
       desc = project.description
       gpg {
         sign = project.hasProperty('bintrayGpgPassphrase')
-        passphrase = project.hasProperty('bintrayGpgPassphrase') ? bintrayGpgPassphrase : ''
+        passphrase = (System.getenv('BINTRAY_GPG_PASSPHRASE') ?: project.properties.getOrDefault('bintrayGpgPassphrase', ''))
       }
       mavenCentralSync {
         sync = false
