@@ -2,7 +2,7 @@ import java.text.SimpleDateFormat
 
 buildscript {
   ext {
-    springBootVersion = '2.1.4.RELEASE'
+    springBootVersion = '2.1.5.RELEASE'
     springCloudVersion = 'Greenwich.SR1'
   }
   repositories {
