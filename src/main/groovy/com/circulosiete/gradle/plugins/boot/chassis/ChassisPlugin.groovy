@@ -26,7 +26,7 @@ import org.yaml.snakeyaml.Yaml
 
 class ChassisPlugin implements Plugin<Project> {
 
-  public static final String DEFAULT_SPRING_BOOT_VERSION = '2.1.3.RELEASE'
+  public static final String DEFAULT_SPRING_BOOT_VERSION = '2.1.6.RELEASE'
   public static final String DEFAULT_SPRING_CLOUD_VERSION = 'Greenwich.SR1'
   public static final String EXTENSION_NAME = 'service'
   public static final String DOCKERFILE_EXTENSION_NAME = 'dockerfile'
